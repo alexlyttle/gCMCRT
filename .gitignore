@@ -42,3 +42,6 @@ MALBEC_benchmark_examples
 # Cia data
 *.cia
 
+# Compiled binaries
+goptools
+gCMCRT
