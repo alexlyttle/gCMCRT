@@ -15,18 +15,28 @@ nwl = 503
 # Calculate planetary flux from Em_* files
 Fp = np.zeros((n_ph,nwl))
 
+# File header info
+num_header = 4  # <-- number of header values
+
 # Cycle through each phase, reading the emission data
 for n in range(n_ph):
   fname = 'Em_'+str(n+1).zfill(3)+'.txt'
   print(fname)
-  head = np.loadtxt(fname,max_rows=1)
+
+  # Open file reading header and data
+  with open(fname, "r") as file:
+    head = []
+    while len(head) < num_header:
+      head += file.readline().strip().split()
+    data = np.loadtxt(file)
+
   # Phase (longitude degree)
-  ph = int(head[3])
+  ph = int(float(head[3]))
   # Radius of planet at surface
   Rp = float(head[1])
   # Radius of planet + atmosphere top
   Rp2 = float(head[2])
-  data = np.loadtxt(fname,skiprows=1)
+
   # Read wavelength
   wl = data[:,0]
   # Read the escaped energy fraction
@@ -101,7 +111,7 @@ plt.tick_params(axis='both',which='major',labelsize=12)
 
 plt.tight_layout(pad=1.05, h_pad=None, w_pad=None, rect=None)
 
-#plt.savefig('Fp.png',dpi=300,bbox_inches='tight')
+plt.savefig('Fp.png',dpi=300,bbox_inches='tight')
 
 # Brightness temperature plots
 fig = plt.figure()
@@ -127,7 +137,7 @@ plt.tick_params(axis='both',which='major',labelsize=12)
 
 plt.tight_layout(pad=1.05, h_pad=None, w_pad=None, rect=None)
 
-#plt.savefig('BT.png',dpi=300,bbox_inches='tight')
+plt.savefig('BT.png',dpi=300,bbox_inches='tight')
 
 # Fp/Fs plots
 
@@ -164,6 +174,6 @@ plt.tick_params(axis='both',which='major',labelsize=12)
 
 plt.tight_layout(pad=1.05, h_pad=None, w_pad=None, rect=None)
 
-#plt.savefig('FpFs.png',dpi=300,bbox_inches='tight')
+plt.savefig('FpFs.png',dpi=300,bbox_inches='tight')
 
-plt.show()
+# plt.show()
